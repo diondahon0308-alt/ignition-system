@@ -9,6 +9,18 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}
 main{max-width:560px;margin:0 auto;padding:10px}
+input[type=number]{flex:1;min-width:0;background:var(--pn);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:6px;font:inherit}
+input[type=color]{width:38px;height:26px;padding:0;border:1px solid var(--ln);border-radius:6px;background:none;flex:none;margin-left:auto}
+details{border-top:1px solid var(--ln);padding:6px 0}details>summary{cursor:pointer;font-weight:600;font-size:13px}details p,details li{margin:5px 0}details table{border-collapse:collapse;width:100%;font-size:12px}details td,details th{border-bottom:1px solid var(--ln);padding:3px 4px;text-align:left;vertical-align:top}
+.cr{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px}.cr span{color:var(--mu)}.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:480px){.cgrid{grid-template-columns:1fr}}
+body.land{overflow:hidden}
+body.land main{max-width:none;margin:0;height:100vh;height:100dvh;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr);grid-template-rows:auto minmax(0,1fr);gap:4px 12px}
+body.land header{grid-column:1/3}
+body.land .cvw{grid-column:1;grid-row:2;min-height:0}
+body.land canvas{position:absolute;left:0;top:0;width:100%;height:100%;aspect-ratio:auto}
+body.land .side{grid-column:2;grid-row:2;overflow-y:auto;min-height:0;padding-right:4px}
+body.land .tabs{margin-top:0;flex-wrap:wrap}
 header{display:flex;justify-content:space-between;align-items:baseline}
 h1{font-size:16px;margin:2px 0}#fps{font-size:11px;color:var(--mu)}
 .cvw{position:relative}
@@ -33,11 +45,11 @@ select{flex:1;min-width:0;background:var(--pn);color:var(--tx);border:1px solid 
 .ln{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:middle;margin-right:5px}
 </style></head><body><main>
 <header><h1>Ignition System · Prima Simulator</h1><span id="fps"></span></header>
-<div class="cvw"><canvas id="c"></canvas><div class="ov"><button id="pz">⏸</button><button id="sd">×2</button><button id="eye">👁</button></div></div>
-<div class="tabs"><button data-tab="place" class="on">Place</button><button data-tab="bind">Binding</button><button data-tab="world">World</button><button data-tab="info">Info</button></div>
+<div class="cvw"><canvas id="c"></canvas><div class="ov"><button id="pz">Pause</button><button id="sd">×2</button><button id="eye">Layers</button></div></div>
+<div class="side"><div class="tabs"><button data-tab="place" class="on">Place</button><button data-tab="bind">Binding</button><button data-tab="world">World</button><button data-tab="theme">Theme</button><button data-tab="guide">Guide</button><button data-tab="info">Info</button></div>
 
 <section class="sec on" id="sec-place">
-<div class="chips" id="tools"><button data-t="create" class="on">✨ Create</button><button data-t="pull">🧲 Pull</button><button data-t="push">💨 Push</button><button data-t="degrade">☣ Degrade</button><button data-t="erase">🧽 Erase</button><button data-t="heat">🔥 Heat</button><button data-t="cold">❄ Cold</button><button data-t="inspect">🔍 Inspect</button><button data-t="pan">✋ Pan</button></div>
+<div class="chips" id="tools"><button data-t="create" class="on">Create</button><button data-t="pull">Pull</button><button data-t="push">Push</button><button data-t="degrade">Degrade</button><button data-t="erase">Erase</button><button data-t="heat">Heat</button><button data-t="cold">Cold</button><button data-t="inspect">Inspect</button><button data-t="pan">Pan</button></div>
 <div class="pn">
 <label><span>Create</span><select id="ci"></select></label>
 <div class="mu" id="chint" style="margin:0 0 6px"></div>
@@ -59,27 +71,32 @@ select{flex:1;min-width:0;background:var(--pn);color:var(--tx);border:1px solid 
 <div><b>Bonds</b> draws a line between every bound pair. <span class="ln" style="border-color:#7888b4"></span>weak <span class="ln" style="border-color:#8fd3ff"></span>medium <span class="ln" style="border-color:#ffc857"></span>strong (g-rich).</div>
 <div style="margin-top:6px"><b>Coordination</b> colours each Prima by how many neighbours it is bound to: dark blue = loose, gold = tightly bound.</div>
 <div style="margin-top:6px"><b>Layers</b> halos each Prima by depth in its structure: <span class="ch"><i style="background:#ffd84a"></i>core</span><span class="ch"><i style="background:#ff9a3e"></i>body</span><span class="ch"><i style="background:#7bd88f"></i>edge</span></div>
-<div style="margin-top:6px"><b>Phase</b> colours each Prima by its emergent state: <span class="ch"><i style="background:#9ad0ff"></i>solid</span> compact, <span class="ch"><i style="background:#2fd0a0"></i>liquid</span> spaced, <span class="ch"><i style="background:#ffb066"></i>gas</span> widely spaced. <b>Flow map</b> averages Prima motion into arrows (blue → orange by speed) and adds thin orange heat-flow arrows, so you can watch a Cyclone's insides spin and see where energy travels. <b>Light</b> hides the Primas and shows only what light reveals: lit Je+Ky compounds (more Je → shorter wavelength: red → violet), moving light rays, and the Primas those lights fall on. Try a Star or a Jeg-Ky Onogon. Turn the <b>Primas</b> layer off to keep cells as solid bodies with their rings.</div><div style="margin-top:6px">Compound bonds are always shown as white springs. Use 🔍 Inspect on a structure to see its composition and cohesion.</div>
+<div style="margin-top:6px"><b>Phase</b> colours each Prima by its emergent state: <span class="ch"><i style="background:#9ad0ff"></i>solid</span> compact, <span class="ch"><i style="background:#2fd0a0"></i>liquid</span> spaced, <span class="ch"><i style="background:#ffb066"></i>gas</span> widely spaced. <b>Flow map</b> averages Prima motion into arrows (blue → orange by speed) and adds thin orange heat-flow arrows, so you can watch a Cyclone's insides spin and see where energy travels. <b>Light</b> hides the Primas and shows only what light reveals: lit Je+Ky compounds (more Je → shorter wavelength: red → violet), moving light rays, and the Primas those lights fall on. Try a Star or a Jeg-Ky Onogon. Turn the <b>Primas</b> layer off to keep cells as solid bodies with their rings.</div><div style="margin-top:6px">Compound bonds are always shown as white springs. Use Inspect on a structure to see its composition and cohesion.</div>
 </div>
 <div class="pn k"><b>Onogons</b> (Prima compounds) have three states: <span class="ch"><i style="background:#7bd88f"></i>Rigid</span> fully bonded and anchored, <span class="ch"><i style="background:#ffb23e"></i>Loose</span> partly bonded or weakly bonded, <span class="ch"><i style="background:#9aa"></i>Mixed</span> components present but not bonded. Mixed → Loose → Rigid as bonds form; heat above +2,600 °U breaks them. Light from Je+Ky needs a bond: Rigid glows fully, Loose dimly, Mixed not at all.
-<div style="margin-top:6px"><b>Envelopes</b> are compounds of compounds. They survive some vaporized structures and keep a trace of their history; use 🔍 Inspect on one to read it.</div></div>
-<div class="pn"><b>Show / hide layers</b> <span class="mu">(also the 👁 button on the canvas)</span><div class="chips" id="vis" style="margin-top:6px"><button data-v="prim" class="on">Primas</button><button data-v="bonds" class="on">Bonds</button><button data-v="cells" class="on">Cells</button><button data-v="names" class="on">Names</button><button data-v="haze" class="on">Haze</button><button data-v="temp" class="on">Temp map</button><button data-v="fx" class="on">Effects</button></div></div>
+<div style="margin-top:6px"><b>Envelopes</b> are compounds of compounds. They survive some vaporized structures and keep a trace of their history; use Inspect on one to read it.</div></div>
+<div class="pn"><b>Show / hide layers</b> <span class="mu">(also the Layers button on the canvas)</span><div class="chips" id="vis" style="margin-top:6px"><button data-v="prim" class="on">Primas</button><button data-v="bonds" class="on">Bonds</button><button data-v="cells" class="on">Cells</button><button data-v="names" class="on">Names</button><button data-v="haze" class="on">Haze</button><button data-v="temp" class="on">Temp map</button><button data-v="fx" class="on">Effects</button></div></div>
 </section>
 
 <section class="sec" id="sec-world">
 <div class="pn"><b>Simulation preset</b>
 <label><span>Preset</span><select id="wp"></select></label>
-<label><span>Particles</span><input id="wn" type="range" min="100" max="2000" step="50" value="700"></label>
+<label><span>Particles</span><input id="wn" type="range" min="100" max="10000" step="50" value="700"></label>
 <label><span>Distribution</span><select id="wd"><option>Clouds</option><option>Uniform</option></select></label>
 <label><span>Start temp °U</span><input id="wt" type="range" min="-8000" max="8000" step="500" value="0"></label>
-<div class="chips"><button id="gw">⚙ Generate world</button></div></div>
+<div class="chips"><button id="gw">Generate world</button></div></div>
 <div class="pn" id="cw"></div>
 <div class="pn">
-<label><span>World size</span><select id="ws"><option value="0">Small 400×520</option><option value="1" selected>Large 800×1040</option><option value="2">Huge 1200×1560</option></select></label>
-<label><span>Zoom</span><input id="zm" type="range" min="50" max="300" value="100"></label>
+<label><span>World size</span><select id="ws"><option value="0">Small 400×520</option><option value="1" selected>Large 800×1040</option><option value="2">Huge 1200×1560</option><option value="3">Wide 1600×900</option><option value="4">Vast 2400×2400</option><option value="5">Giant 4000×4000</option><option value="6">Custom…</option></select></label>
+<div id="cwz" style="display:none"><label><span>Width</span><input id="cwW" type="number" min="100" max="8000" step="50" value="1600"></label><label><span>Height</span><input id="cwH" type="number" min="100" max="8000" step="50" value="900"></label><div class="mu">100 – 8000 per side. Press Reset world to apply.</div></div>
+<label><span>Particle limit</span><input id="mp" type="range" min="1000" max="12000" step="500" value="2200"><b id="mpv" style="width:44px;text-align:right">2200</b></label>
+<label><span>Zoom</span><input id="zm" type="range" min="10" max="300" value="100"></label>
 <label><span>Auto-throttle</span><input id="au" type="checkbox" checked><span style="width:auto">lowers speed if FPS drops</span></label>
 </div>
 <div class="chips"><button id="ct">Clear temp</button><button id="rs">Reset world</button></div></section>
+
+<section class="sec" id="sec-theme"><div class="pn" id="thm"></div></section>
+<section class="sec" id="sec-guide"><div class="pn" id="gd"></div></section>
 
 <section class="sec" id="sec-info">
 <div class="pn"><div class="g" id="st"></div></div>
@@ -92,17 +109,17 @@ select{flex:1;min-width:0;background:var(--pn);color:var(--tx);border:1px solid 
 <div class="pn" id="lvl"></div>
 <div class="pn" id="lg"></div>
 </section>
-<p class="mu" style="font-size:11px">Heat/Cold add °U (gates ±2,600, melt ±12,780). Je at 2,330 Intensity shatters Elements. Thundercells and Quasars vent real bolts and sparks.</p>
+<p class="mu" style="font-size:11px">Heat/Cold add °U (gates ±2,600, melt ±12,780). Je at 2,330 Intensity shatters Elements. Thundercells and Quasars vent real bolts and sparks.</p></div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const VW=400,VH=520,S=Math.min(window.devicePixelRatio||1,2),cv=$('c'),ctx=cv.getContext('2d');cv.width=VW*S;cv.height=VH*S;
-const GC=20,R=22,R2=R*R,MAXP=2200,MAXL=5000;
+let VW=400,VH=520;const S=Math.min(window.devicePixelRatio||1,2),cv=$('c'),ctx=cv.getContext('2d');cv.width=VW*S;cv.height=VH*S;
+const GC=20,R=22,R2=R*R,MAXL=5000,ARR=12000;let MAXP=2200;
 const TY=[{n:'M',c:'#c9a86a',b:1},{n:'Ps',c:'#e58fc0',b:.8},{n:'U',c:'#6fa8dc',b:1},{n:'P',c:'#ff5a4d',b:.5,ch:1},{n:'Ae',c:'#4fd0ff',b:.5,ch:-1},{n:'g',c:'#a4e06a',b:1.8},{n:'h',c:'#b79df2',b:.6},{n:'f',c:'#ffd84a',b:1.3},{n:'Je',c:'#ff4fd8',b:.7},{n:'Ku',c:'#9a9a9a',b:.4},{n:'Ky',c:'#ffffff',b:.6}];
 const AFF=new Float32Array(121);
 for(let i=0;i<11;i++)for(let j=0;j<11;j++){let v=Math.sqrt(TY[i].b*TY[j].b);if(i===5||j===5)v*=1.25;if(i===7&&j===7)v*=1.4;if(i===9||j===9)v*=.8;if((i===3&&j===4)||(i===4&&j===3))v*=.6;AFF[i*11+j]=v}
 function mkSp(lab){return TY.map(t=>{const c=document.createElement('canvas');c.width=c.height=32;const g=c.getContext('2d');g.fillStyle=t.c;g.beginPath();g.arc(16,16,15,0,6.283);g.fill();if(lab){g.fillStyle='#000';g.font='bold 15px system-ui';g.textAlign='center';g.textBaseline='middle';g.fillText(t.n,16,17)}return c})}
-const SPL=mkSp(true),SPN=mkSp(false);
+let SPL=mkSp(true),SPN=mkSp(false);
 const STG=[['Primordial Genesis',0,8],['Genesis',100,12],['Last Genesis',200,14],['Staging Morphisis',300,16],['Formed Morphisis',420,20],['Final Morphisis',540,22],['Early Primary',660,26],['Primary Morphisis',780,28],['Early Infancy',900,32],['Infancy',1050,36],['Late Infancy',1200,40],['Regular Cell',1350,44]];
 const LC=['#ffb23e','#7bd88f','#6fc3ff','#c58cff'],LYC=['#ffd84a','#ff9a3e','#7bd88f'];
 const std=[.2,.1,.1,.09,.09,.14,.06,.1,.03,.04,.05];
@@ -167,7 +184,7 @@ function branch(k){if(k.failed||k.shrink)return 'Gas Group';if(k.huge)return 'Ma
 
 let W=800,H=1040,Z=1,cam={x:0,y:0},GW=0,GH=0,TG,TG2,dcA,addA,hdA,tcv,tctx,timg;
 let P=[],cl=[],lg=[],LFI,LFR,LFG,LFB,LFI2,LFR2,LFG2,LFB2,LGI,LGR,LGG,LGB,lcv,lctx,limg,FVX,FVY,FCN,LR=[],ROOTM=new Map(),hideP=false,WV=[],IWS=[],iwid=0,fxStart=null,BR=40,BS=5,CI='cloud',VIS={bonds:true,cells:true,haze:true,fx:true},BM=[],GGS=[],CLID=new Map(),ROOTS=new Set(),condA,phS=0,phL=0,phG=0,BD=[],BO=[],PU=[],OG=[],ENV=[],MIC=[],PEND=[],tool='create',bind='off',paused=false,showT=true,showN=true,tick=0,ptr=null,panning=null,uid=0,sel=0,selEnv=0,eid=0,wipes=0,spd=2,auto=true,wantLinks=false,VX0=0,VX1=0,VY0=0,VY1=0,sparkN=0,deadN=0,vanN=0,MM={x:0,y:0,w:0,h:0};
-const nx=new Int32Array(MAXP),par=new Int32Array(MAXP),jn=new Uint8Array(MAXP),kn=new Uint8Array(MAXP);
+const nx=new Int32Array(ARR),par=new Int32Array(ARR),jn=new Uint8Array(ARR),kn=new Uint8Array(ARR);
 const LK=[new Float32Array(MAXL*4),new Float32Array(MAXL*4),new Float32Array(MAXL*4)],lcnt=[0,0,0];
 function logE(s){lg.unshift(s);lg=lg.slice(0,6)}
 function find(i){while(par[i]!==i){par[i]=par[par[i]];i=par[i]}return i}
@@ -224,7 +241,7 @@ if(!pr.bd){const d=Math.hypot(pr.a.x-pr.b.x,pr.a.y-pr.b.y);if(d<14&&Math.random(
 if(pr.bd)f++}
 const n=g.pairs.length;g.state=f===0?'Mixed':(f<n||g.ps.length<g.need)?'Loose':'Rigid';
 const k=g.state==='Rigid'?.12:.03;for(const pr of g.pairs)if(pr.bd)pr.bd[3]=k}}
-function setWorld(i,noSeed){const z=[[400,520],[800,1040],[1200,1560]][i];W=z[0];H=z[1];GW=Math.ceil(W/GC);GH=Math.ceil(H/GC);const L=GW*GH;
+function setWorld(i,noSeed){const z=worldSize(i);W=z[0];H=z[1];GW=Math.ceil(W/GC);GH=Math.ceil(H/GC);const L=GW*GH;
 TG=new Float32Array(L);TG2=new Float32Array(L);dcA=new Float32Array(L);addA=new Float32Array(L);condA=new Uint8Array(L);BM=[];GGS=[];WV=[];IWS=[];LR=[];LCNT.rays=0;LCNT.beams=0;vanN=0;for(const k in EVC)EVC[k]=0;LGI=new Float32Array(L);LGR=new Float32Array(L);LGG=new Float32Array(L);LGB=new Float32Array(L);LFI=new Float32Array(L);LFR=new Float32Array(L);LFG=new Float32Array(L);LFB=new Float32Array(L);LFI2=new Float32Array(L);LFR2=new Float32Array(L);LFG2=new Float32Array(L);LFB2=new Float32Array(L);lcv=document.createElement('canvas');lcv.width=GW;lcv.height=GH;lctx=lcv.getContext('2d');limg=lctx.createImageData(GW,GH);{const fl=Math.ceil(W/16)*Math.ceil(H/16);FVX=new Float32Array(fl);FVY=new Float32Array(fl);FCN=new Float32Array(fl)}hdA=new Int32Array(Math.ceil(W/R)*Math.ceil(H/R));
 tcv=document.createElement('canvas');tcv.width=GW;tcv.height=GH;tctx=tcv.getContext('2d');timg=tctx.createImageData(GW,GH);
 P=[];cl=[];lg=[];BD=[];BO=[];PU=[];OG=[];ENV=[];MIC=[];PEND=[];uid=0;sel=0;selEnv=0;cam.x=W/2-VW/Z/2;cam.y=H/2-VH/Z/2;if(!noSeed)seed(W/2,H/2,50)}
@@ -466,7 +483,7 @@ for(const p of P)if(p.tag&&Math.hypot(p.x-x,p.y-y)<60&&!p.iw)p.iw=id;
 const n=Math.min(380,MAXP-P.length-10);
 for(let i=0;i<n;i++){const a=Math.random()*6.283,r=26+Math.sqrt(Math.random())*(R-36),p=spawn(pickFrom(w),x+Math.cos(a)*r,y+Math.sin(a)*r);if(!p)continue;p.iw=id;if(giant){p.vx=-Math.sin(a)*.5;p.vy=Math.cos(a)*.5}}
 IWS.push({id,x,y,r:R,type,n0:n,inside:n});logE('Interworld '+id+' formed ('+type+')')}
-function bigBang(){const wi=Math.max(1,+$('ws').value);setWorld(wi,true);$('ws').value=String(wi);const n=Math.min(2000,+$('wn').value),cx=W/2,cy=H/2;
+function bigBang(){const wi=Math.max(1,+$('ws').value);setWorld(wi,true);$('ws').value=String(wi);const n=Math.min(MAXP-10,+$('wn').value),cx=W/2,cy=H/2;
 for(let i=0;i<n;i++){const a=Math.random()*6.283,r=Math.random()*10,p=spawn(Math.random()*11|0,cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!p)continue;const sp=.3+Math.random()*1.5;p.vx=Math.cos(a)*sp;p.vy=Math.sin(a)*sp;p.bb=600}
 for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){const d=Math.hypot((x+.5)*GC-cx,(y+.5)*GC-cy);if(d<90)TG[y*GW+x]=9000*(1-d/90)}
 ray(cx,cy,2,300);cam.x=cx-VW/Z/2;cam.y=cy-VH/Z/2;logE('Big Bang — '+P.length+' simple Primas expanding from a single point')}
@@ -557,17 +574,16 @@ for(let i=0;i<L;i++){const I=LFI[i],o=i*4;if(I<.003){d[o+3]=0;continue}d[o]=LFR[
 lctx.putImageData(limg,0,0);ctx.imageSmoothingEnabled=true;ctx.globalCompositeOperation='lighter';ctx.drawImage(lcv,0,0,GW,GH,0,0,GW*GC,GH*GC);ctx.globalCompositeOperation='source-over';
 for(const p of P){if(!(p.lit>0)||p.t!==10||p.gone||p.x<x0||p.x>x1||p.y<y0||p.y>y1)continue;const c=lcol(p.jc);ctx.fillStyle='rgb('+c[0]+','+c[1]+','+c[2]+')';ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,6.283);ctx.fill()}}
 function draw(){
-ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle='#05070b';ctx.fillRect(0,0,VW,VH);clampCam();
+ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle=CV.void;ctx.fillRect(0,0,VW,VH);clampCam();
 ctx.setTransform(S*Z,0,0,S*Z,-cam.x*S*Z,-cam.y*S*Z);
 const x0=cam.x-8,y0=cam.y-8,x1=cam.x+VW/Z+8,y1=cam.y+VH/Z+8;
-ctx.fillStyle='#0a0e15';ctx.fillRect(0,0,W,H);
-if(showT&&bind!=='light'){const d=timg.data,L=GW*GH;for(let i=0;i<L;i++){const T=TG[i],o=i*4,aT=T<0?-T:T;if(aT<2){d[o+3]=0;continue}const a=Math.min(.8,aT/1800+.1);
-if(T>0){d[o]=255;d[o+1]=Math.min(230,70+T/12780*500);d[o+2]=40}else{d[o]=Math.min(200,60+aT/12780*500);d[o+1]=170;d[o+2]=255}d[o+3]=a*255}
+ctx.fillStyle=CV.floor;ctx.fillRect(0,0,W,H);
+if(showT&&bind!=='light'){const d=timg.data,L=GW*GH;for(let i=0;i<L;i++){const T=TG[i],o=i*4,aT=T<0?-T:T;if(aT<2){d[o+3]=0;continue}const a=Math.min(.92,(aT/1800+.1)*CV.heatA),k=Math.min(1,aT/12780*2.5),B0=T>0?HOT0:COLD0,B1=T>0?HOT1:COLD1;d[o]=B0[0]+(B1[0]-B0[0])*k;d[o+1]=B0[1]+(B1[1]-B0[1])*k;d[o+2]=B0[2]+(B1[2]-B0[2])*k;d[o+3]=a*255}
 tctx.putImageData(timg,0,0);ctx.imageSmoothingEnabled=true;ctx.drawImage(tcv,0,0,GW,GH,0,0,GW*GC,GH*GC)}
-ctx.strokeStyle='#3a4458';ctx.lineWidth=2/Z;ctx.strokeRect(0,0,W,H);
+ctx.strokeStyle=CV.border;ctx.lineWidth=2/Z;ctx.strokeRect(0,0,W,H);
 if(bind==='bonds'&&!hideP&&VIS.bonds){const cols=['rgba(120,136,180,.45)','rgba(143,211,255,.7)','rgba(255,200,87,.95)'],wd=[.8,1.2,1.9];
 for(let b=0;b<3;b++){ctx.strokeStyle=cols[b];ctx.lineWidth=wd[b];ctx.beginPath();const A=LK[b];for(let k=0;k<lcnt[b];k++){const o=k*4;ctx.moveTo(A[o],A[o+1]);ctx.lineTo(A[o+2],A[o+3])}ctx.stroke()}}
-ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1.4;ctx.beginPath();for(const q of ((hideP||!VIS.bonds)?[]:BD)){if(q[0].x<x0||q[0].x>x1||q[0].y<y0||q[0].y>y1)continue;ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y)}ctx.stroke();
+ctx.strokeStyle=BONDC;ctx.lineWidth=1.4;ctx.beginPath();for(const q of ((hideP||!VIS.bonds)?[]:BD)){if(q[0].x<x0||q[0].x>x1||q[0].y<y0||q[0].y>y1)continue;ctx.moveTo(q[0].x,q[0].y);ctx.lineTo(q[1].x,q[1].y)}ctx.stroke();
 for(const g of (VIS.haze?GGS:[])){if(g.x<x0-g.r||g.x>x1+g.r||g.y<y0-g.r||g.y>y1+g.r)continue;ctx.fillStyle='rgba(255,190,120,.06)';ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,6.283);ctx.fill();ctx.fillStyle='rgba(255,190,120,.07)';ctx.beginPath();ctx.arc(g.x,g.y,g.r*.6,0,6.283);ctx.fill()}
 if(bind!=='light')for(const w of IWS){if(w.x<x0-w.r||w.x>x1+w.r||w.y<y0-w.r||w.y>y1+w.r)continue;ctx.fillStyle='rgba(80,200,200,.05)';ctx.beginPath();ctx.arc(w.x,w.y,w.r,0,6.283);ctx.fill();ctx.strokeStyle='rgba(90,220,210,.7)';ctx.lineWidth=2;ctx.setLineDash([8,5]);ctx.beginPath();ctx.arc(w.x,w.y,w.r,0,6.283);ctx.stroke();ctx.setLineDash([]);if(showN){ctx.fillStyle='#7be8d8';ctx.font='9px system-ui';ctx.textAlign='center';ctx.fillText('Interworld '+w.id+' · '+w.type.split(' ')[0]+' · '+w.inside,w.x,w.y-w.r-6)}}
 if(bind==='flow')drawFlow(x0,y0,x1,y1);
@@ -578,7 +594,7 @@ if(bind==='light'){if(p.dead)continue;const li=LFI[Math.min(GH-1,(p.y/GC)|0)*GW+
 if(p.dead){ctx.fillStyle=(p.vx||p.vy)?'#c9b3a3':'#8aa0bb';ctx.fillRect(p.x-1.2,p.y-1.2,2.4,2.4);continue}
 const t=p.t,r=t===7?4.4:4;
 if(p.sk>0){ctx.fillStyle='rgba(190,230,255,.45)';ctx.beginPath();ctx.arc(p.x,p.y,6.5,0,6.283);ctx.fill();ctx.strokeStyle='rgba(190,230,255,.6)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*4,p.y-p.vy*4);ctx.stroke()}
-if(bind==='coord'||bind==='phase'){if(bind==='coord'){const k=Math.max(0,Math.min(1,(p.nb-2)/9));ctx.fillStyle='rgb('+((50+205*k)|0)+','+((70+150*k)|0)+','+((200-130*k)|0)+')'}else ctx.fillStyle=p.liq?'#2fe0b0':p.ph===0?'#9ad0ff':p.ph===1?'#2fd0a0':'#ffb066';ctx.beginPath();ctx.arc(p.x,p.y,3.8,0,6.283);ctx.fill();continue}
+if(bind==='coord'||bind==='phase'){if(bind==='coord'){const k=Math.max(0,Math.min(1,(p.nb-2)/9));ctx.fillStyle='rgb('+((50+205*k)|0)+','+((70+150*k)|0)+','+((200-130*k)|0)+')'}else ctx.fillStyle=p.liq?PHC[3]:PHC[p.ph|0];ctx.beginPath();ctx.arc(p.x,p.y,3.8,0,6.283);ctx.fill();continue}
 if(bind==='layers'&&p.ly>=0){ctx.fillStyle=LYC[p.ly];ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(p.x,p.y,r+1.8,0,6.283);ctx.fill();ctx.globalAlpha=1}
 if(p.liq){ctx.fillStyle='rgba(60,210,255,.4)';ctx.beginPath();ctx.arc(p.x,p.y,r+2.2,0,6.283);ctx.fill()}
 if(t===10){if(p.lit){const dg=p.dg||0;ctx.fillStyle='rgba('+((255-120*dg)|0)+',79,'+((168+87*dg)|0)+','+(.4*p.lit)+')';ctx.beginPath();ctx.arc(p.x,p.y,7,0,6.283);ctx.fill()}else ctx.globalAlpha=.2}
@@ -617,11 +633,11 @@ if(c.st>=4){ctx.setLineDash([]);ctx.fillStyle='#ffd84a';ctx.beginPath();ctx.arc(
 if(c.lvl>0){ctx.strokeStyle=LVC[c.lvl];ctx.lineWidth=1+c.lvl*.5;ctx.globalAlpha=.35+.1*c.lvl;ctx.setLineDash(c.lvl>=4?[]:[4,3]);ctx.beginPath();ctx.arc(c.x,c.y,r+34+c.lvl*3+(c.lvl>=5?2*Math.sin(tick*.15):0),0,6.283);ctx.stroke();ctx.globalAlpha=1;ctx.setLineDash([])}
 const rs=[r,r+8,r+13,r+18],mins=[6,7,8,8];
 for(let q=0;q<4;q++)if(c.st>=mins[q]){ctx.strokeStyle=LC[q];ctx.setLineDash(q===2?[3,2]:[]);ctx.lineWidth=q===0?1.6:1;ctx.beginPath();ctx.arc(c.x,c.y,rs[q],0,6.283);ctx.stroke()}
-ctx.setLineDash([]);ctx.fillStyle='#ddd';ctx.fillText('#'+c.id+' '+(k&&k!=='Cell'?k+' · ':'')+(NOST[k]?'':STG[c.st][0])+(c.lvl>0?' · L'+c.lvl:''),c.x,c.y-(c.st>=8?r+22:r+6))}
+ctx.setLineDash([]);ctx.fillStyle=CV.label;ctx.fillText('#'+c.id+' '+(k&&k!=='Cell'?k+' · ':'')+(NOST[k]?'':STG[c.st][0])+(c.lvl>0?' · L'+c.lvl:''),c.x,c.y-(c.st>=8?r+22:r+6))}
 if(ptr&&bind!=='light'&&{pull:1,push:1,degrade:1,erase:1,heat:1,cold:1}[tool]){ctx.strokeStyle={pull:'#6fc3ff',push:'#ffa66f',degrade:'#c58cff',erase:'#ff6a6a',heat:'#ff6a3d',cold:'#7fd3ff'}[tool];ctx.lineWidth=1.5/Z;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(ptr.x,ptr.y,BR,0,6.283);ctx.stroke();ctx.setLineDash([])}
 if(fxStart&&ptr){ctx.strokeStyle='#fff';ctx.lineWidth=1.5/Z;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(fxStart.x,fxStart.y);ctx.lineTo(ptr.x,ptr.y);ctx.stroke();ctx.setLineDash([])}
 ctx.setTransform(S,0,0,S,0,0);ctx.setLineDash([]);
-const mw=72,mh=Math.round(72*H/W);MM={x:VW-mw-6,y:6,w:mw,h:mh};
+const msc=84/Math.max(W,H),mw=Math.max(20,Math.round(W*msc)),mh=Math.max(20,Math.round(H*msc));MM={x:VW-mw-6,y:6,w:mw,h:mh};
 ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(MM.x,MM.y,mw,mh);
 for(const c of cl){ctx.fillStyle=c.cyst?'#f55':'#ffd84a';ctx.fillRect(MM.x+c.x/W*mw-1,MM.y+c.y/H*mh-1,2,2)}
 ctx.lineWidth=1;ctx.strokeStyle='#fff';ctx.strokeRect(MM.x+cam.x/W*mw,MM.y+cam.y/H*mh,Math.min(mw,VW/Z/W*mw),Math.min(mh,VH/Z/H*mh));ctx.strokeStyle='#667';ctx.strokeRect(MM.x,MM.y,mw,mh);
@@ -639,7 +655,7 @@ function iwHud(){$('iws').innerHTML='<b>Interworlds</b> <span class="mu">(energy
 function inspect(){const el=$('insp');
 if(selEnv){const e=ENV.find(q=>q.id===selEnv);if(e){const f=envInfo(e);el.innerHTML='<b>Onogon envelope</b> <span class="mu">('+e.ons[0].name+')—('+e.ons[1].name+')</span><div class="g" style="margin-top:6px"><div>Onogon A <b>'+e.ons[0].state+'</b></div><div>Onogon B <b>'+e.ons[1].state+'</b></div><div>Size <b>'+Math.round(f.r*2)+'</b></div><div>Density <b>'+f.dens.toFixed(1)+'</b></div><div>Intensity <b>'+Math.round(f.inten*100)+'%</b></div><div>Degradation <b>'+Math.round(f.deg*100)+'%</b></div></div><div style="margin-top:6px"><b>History reading:</b> '+f.read+'</div><div class="mu">True origin in this sim: '+e.origin+' · age '+(tick-e.born)+' ticks</div>';return}selEnv=0}
 const c=cl.find(q=>q.id===sel);
-if(!c){el.innerHTML='<span class="mu">Select a structure or envelope: 🔍 Inspect tool, or tap one in a list.</span>';return}
+if(!c){el.innerHTML='<span class="mu">Select a structure or envelope: Inspect tool, or tap one in a list.</span>';return}
 const comp=c.cnt.map((v,i)=>v?'<i style="flex:'+v+';background:'+TY[i].c+'"></i>':'').join(''),txt=c.cnt.map((v,i)=>v?TY[i].n+' '+v:'').filter(Boolean).join(' · ');
 const ly=[['Core',c.st>=4],['Duoprimordial',c.st>=6],['Primordial',c.st>=7],['Primactive',c.st>=8],['Primatronic',c.st>=8],['Circulation',c.circAmt>=.05]].map(q=>(q[1]?'✓ ':'· ')+q[0]).join('  ');
 const act2=Object.keys(c.k).filter(q=>c.k[q]).map(q=>KL[q]).join(', ')||'none';
@@ -666,7 +682,7 @@ document.querySelectorAll('#tools button').forEach(b=>b.onclick=()=>{tool=b.data
 document.querySelectorAll('#bmodes button').forEach(b=>b.onclick=()=>{bind=b.dataset.b;document.querySelectorAll('#bmodes button').forEach(x=>x.classList.toggle('on',x===b))});
 $('cls').onclick=e=>{const t=e.target.closest&&e.target.closest('[data-id]');if(t){sel=+t.dataset.id;selEnv=0;inspect()}};
 $('envs').onclick=e=>{const t=e.target.closest&&e.target.closest('[data-env]');if(t){selEnv=+t.dataset.env;sel=0;inspect()}};
-$('pz').onclick=e=>{paused=!paused;e.target.textContent=paused?'▶':'⏸'};
+$('pz').onclick=e=>{paused=!paused;e.target.textContent=paused?'Play':'Pause'};
 $('sd').onclick=e=>{spd=spd%4+1;e.target.textContent='×'+spd};
 document.querySelectorAll('#vis button').forEach(b=>b.onclick=()=>{const k=b.dataset.v,on=!b.classList.contains('on');b.classList.toggle('on',on);if(k==='prim')hideP=!on;else if(k==='temp')showT=on;else if(k==='names')showN=on;else VIS[k]=on;$('eye').style.opacity=hideP?.45:1});
 $('eye').onclick=()=>{hideP=!hideP;document.querySelector('#vis button[data-v="prim"]').classList.toggle('on',!hideP);$('eye').style.opacity=hideP?.45:1};
@@ -674,7 +690,8 @@ $('ci').onchange=()=>{CI=$('ci').value;hint()};$('br').oninput=e=>{BR=+e.target.
 $('ct').onclick=()=>{TG.fill(0)};
 $('au').onchange=e=>{auto=e.target.checked};
 $('zm').oninput=e=>{const cx=cam.x+VW/Z/2,cy=cam.y+VH/Z/2;Z=e.target.value/100;cam.x=cx-VW/Z/2;cam.y=cy-VH/Z/2};
-$('ws').onchange=e=>setWorld(+e.target.value);
+$('ws').onchange=e=>{$('cwz').style.display=e.target.value==='6'?'block':'none';if(e.target.value!=='6')setWorld(+e.target.value)};
+$('mp').oninput=e=>{MAXP=+e.target.value;$('mpv').textContent=MAXP};
 $('rs').onclick=()=>setWorld(+$('ws').value);
 const po=i=>'<option value="'+i+'">'+PRE[i][0]+'</option>';let ph='<option value="0">Custom (sliders)</option><optgroup label="Cellular origination (canon)">';for(let i=1;i<PRE.length;i++){if(i===16)ph+='</optgroup><optgroup label="Direct structures (non-cellular origin)">';ph+=po(i)}$('pre').innerHTML=ph+'</optgroup>';$('pre').value=1;
 $('lv').innerHTML=STG.map((q,i)=>'<option value="'+i+'">'+i+' · '+q[0]+'</option>').join('');$('lv').value=11;
@@ -688,7 +705,121 @@ $('el').innerHTML=LVN.map((q,i)=>'<option value="'+i+'">L'+i+' · '+q[0]+'</opti
 $('lvl').innerHTML='<b>Extreme-Level Scale</b> <span class="mu">(dynamic — a structure changes level with its current stress; higher levels intensify its output ×1.15 → ×4, and Level 5 survives limits that would shatter or melt lower levels)</span>'+LVN.map((q,i)=>'<div style="margin-top:4px"><span class="ch" style="border-color:'+LVC[i]+'">L'+i+'</span><b>'+q[0]+'</b>'+(q[1]?' <span class="mu">('+q[1]+'-)</span>':'')+' — '+LVD[i]+'</div>').join('');
 $('cmp').innerHTML=COMP.map((c,i)=>'<option value="'+i+'">'+c[0]+'</option>').join('');
 $('pty').innerHTML=TY.map((t,i)=>'<option value="'+i+'">'+t.n+'</option>').join('');
-$('lg').innerHTML=TY.map((t,i)=>'<span class="ch"><i style="background:'+t.c+'"></i>'+t.n+' · '+TYN[i]+'</span>').join('')+'<div class="mu" style="margin-top:4px">P heats · Ae drains cold · M/Ps/U/g/h bind (g binds hardest) · f field · Je intensity · Ku viscosity · Ky light (needs a Je bond)</div>';
+function legend(){$('lg').innerHTML=TY.map((t,i)=>'<span class="ch"><i style="background:'+t.c+'"></i>'+t.n+' · '+TYN[i]+'</span>').join('')+'<div class="mu" style="margin-top:4px">P heats · Ae drains cold · M/Ps/U/g/h bind (g binds hardest) · f field · Je intensity · Ku viscosity · Ky light (needs a Je bond)</div>';}legend();
+/* ===== layout, world sizes, theme, guide (v9) ===== */
+const WSZ=[[400,520],[800,1040],[1200,1560],[1600,900],[2400,2400],[4000,4000]];
+function worldSize(i){if(i===6){const c=v=>Math.max(100,Math.min(8000,Math.round((+v||800)/10)*10));return[c($('cwW').value),c($('cwH').value)]}return WSZ[i]||WSZ[1]}
+let LAYOUT='auto';
+function applyLayout(){const land=LAYOUT==='landscape'||(LAYOUT==='auto'&&innerWidth>=640&&innerWidth>=innerHeight*1.1);
+document.body.classList.toggle('land',land);
+let w=400,h=520;if(land){w=Math.round(cv.clientWidth)||600;h=Math.round(cv.clientHeight)||400}
+if(w!==VW||h!==VH){VW=w;VH=h;cv.width=Math.round(VW*S);cv.height=Math.round(VH*S);clampCam()}}
+addEventListener('resize',applyLayout);
+if(window.ResizeObserver)new ResizeObserver(applyLayout).observe(document.querySelector('.cvw'));
+
+const hexOf=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const h2r=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const nh=c=>/^#[0-9a-f]{3}$/i.test(c)?'#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3]:c;
+const CV={void:'#05070b',floor:'#0a0e15',border:'#3a4458',label:'#dddddd',bond:'#ffffff',heatA:1};
+let HOT0=[255,70,40],HOT1=[255,230,40],COLD0=[60,170,255],COLD1=[200,170,255],PHC=['#9ad0ff','#2fd0a0','#ffb066','#2fe0b0'],BONDC='rgba(255,255,255,.5)';
+const UIP={'Auto (system)':null,
+'Light':{bg:'#f3f1ec',pn:'#ffffff',tx:'#1b1f27',mu:'#667085',ac:'#c26a00',ln:'#d8d4ca'},
+'Dark':{bg:'#0d1016',pn:'#161b24',tx:'#e8ecf2',mu:'#8a94a6',ac:'#ffb23e',ln:'#2a3140'},
+'Midnight':{bg:'#000000',pn:'#0b0b12',tx:'#e6e6f0',mu:'#7d7d96',ac:'#7aa2ff',ln:'#22222e'},
+'Forest':{bg:'#0e1a14',pn:'#14241b',tx:'#e4f0e6',mu:'#8aa896',ac:'#7bd88f',ln:'#24382c'},
+'Ocean':{bg:'#0a1620',pn:'#102331',tx:'#e2eef7',mu:'#8aa4b8',ac:'#4fd0ff',ln:'#1f3a4d'},
+'Ember':{bg:'#1a0f0c',pn:'#26160f',tx:'#f5e6dc',mu:'#b0907e',ac:'#ff7a4d',ln:'#3d241a'},
+'Rose':{bg:'#fbf0f3',pn:'#ffffff',tx:'#2a1b21',mu:'#8a6b76',ac:'#d6336c',ln:'#ecd3db'},
+'Paper':{bg:'#fafaf7',pn:'#ffffff',tx:'#222222',mu:'#777777',ac:'#2b6cb0',ln:'#dedbd2'}};
+const CVP={'Deep space':['#05070b','#0a0e15','#3a4458','#dddddd','#ffffff'],'Black':['#000000','#05060a','#2a2f3a','#e0e0e0','#ffffff'],'Slate':['#10151c','#1a212b','#4a5668','#e8edf3','#ffffff'],'Paper':['#d9d6cc','#f4f2ea','#8a8576','#222222','#222222'],'Blueprint':['#06213f','#0a3566','#5aa0e8','#d6ebff','#bfe0ff'],'Terminal':['#000a00','#001400','#1f8f3a','#8dff9c','#6dff80']};
+const HPAL={'Fire and ice':['#ff4628','#ffe628','#3caaff','#c8aaff'],'Plasma':['#ff2fa0','#ffd1f0','#2fd6c8','#d6fffa'],'Toxic':['#7dff2f','#f4ffa0','#3a7bff','#a6c4ff'],'Mono':['#8a8a8a','#ffffff','#5a5a5a','#c0c0c0']};
+const UIK=[['bg','Page background'],['pn','Panels'],['tx','Text'],['mu','Muted text'],['ac','Accent'],['ln','Lines and borders']];
+const DEF={ui:'Auto (system)',uic:{...UIP.Dark},cvp:'Deep space',hp:'Fire and ice',layout:'auto',
+cv:{void:'#05070b',floor:'#0a0e15',border:'#3a4458',label:'#dddddd',bond:'#ffffff',heatA:1,hot0:'#ff4628',hot1:'#ffe628',cold0:'#3caaff',cold1:'#c8aaff'},
+prima:TY.map(t=>nh(t.c)),kinds:Object.fromEntries(Object.keys(KC).map(k=>[k,hexOf(...KC[k].split(',').map(Number))])),
+lv:LVC.map(nh),ly:LYC.map(nh),lc:LC.map(nh),sc:{Rigid:nh(SC.Rigid),Loose:nh(SC.Loose),Mixed:nh(SC.Mixed)},ph:PHC.map(nh),light:LIGHTC.map(c=>hexOf(...c))};
+let TH=JSON.parse(JSON.stringify(DEF));
+function loadTheme(){try{const j=JSON.parse(localStorage.getItem('ign-theme-v9')||'null');if(j&&typeof j==='object'){for(const k in DEF){if(j[k]===undefined)continue;if(Array.isArray(DEF[k])){if(Array.isArray(j[k])&&j[k].length===DEF[k].length)TH[k]=j[k]}else if(typeof DEF[k]==='object')TH[k]={...DEF[k],...j[k]};else TH[k]=j[k]}}}catch(e){}LAYOUT=TH.layout||'auto'}
+function saveTheme(){TH.layout=LAYOUT;try{localStorage.setItem('ign-theme-v9',JSON.stringify(TH))}catch(e){}}
+function applyTheme(){const r=document.documentElement;
+if(TH.ui==='Auto (system)'){['--bg','--pn','--tx','--mu','--ac','--ln'].forEach(k=>r.style.removeProperty(k));r.removeAttribute('data-theme');r.style.colorScheme=''}
+else{const u=TH.uic;for(const q of UIK)r.style.setProperty('--'+q[0],u[q[0]]);const b=h2r(u.bg);const light=b[0]*.3+b[1]*.59+b[2]*.11>140;r.setAttribute('data-theme',light?'light':'dark');r.style.colorScheme=light?'light':'dark'}
+const c=TH.cv;CV.void=c.void;CV.floor=c.floor;CV.border=c.border;CV.label=c.label;CV.bond=c.bond;CV.heatA=c.heatA;
+HOT0=h2r(c.hot0);HOT1=h2r(c.hot1);COLD0=h2r(c.cold0);COLD1=h2r(c.cold1);BONDC='rgba('+h2r(c.bond).join(',')+',.5)';cv.style.background=c.void;
+PHC=TH.ph.slice();TH.prima.forEach((v,i)=>TY[i].c=v);for(const k in TH.kinds)KC[k]=h2r(TH.kinds[k]).join(',');
+TH.lv.forEach((v,i)=>LVC[i]=v);TH.ly.forEach((v,i)=>LYC[i]=v);TH.lc.forEach((v,i)=>LC[i]=v);for(const k in TH.sc)SC[k]=TH.sc[k];TH.light.forEach((v,i)=>LIGHTC[i]=h2r(v))}
+function applyPrimas(){SPL=mkSp(true);SPN=mkSp(false);legend();document.querySelectorAll('#cw label span').forEach((e,i)=>{if(TY[i])e.style.color=TY[i].c});if($('gd'))buildGuide()}
+function applyAll(){applyTheme();applyPrimas();saveTheme()}
+function crow(label,val,cb){const d=document.createElement('div');d.className='cr';const sp=document.createElement('span'),i=document.createElement('input');sp.textContent=label;i.type='color';i.value=nh(val);i.oninput=()=>cb(i.value);d.append(sp,i);return d}
+function grp(title,rows,open){const d=document.createElement('details');if(open)d.open=true;const s=document.createElement('summary');s.textContent=title;const g=document.createElement('div');g.className='cgrid';rows.forEach(r=>g.append(r));d.append(s,g);return d}
+function selRow(label,opts,val,cb){const d=document.createElement('label'),sp=document.createElement('span'),se=document.createElement('select');sp.textContent=label;opts.forEach(o=>{const e=document.createElement('option');e.textContent=o;se.append(e)});se.value=val;se.onchange=()=>cb(se.value);d.append(sp,se);return d}
+function buildTheme(){const box=$('thm');box.innerHTML='';
+const mk=(t)=>{const b=document.createElement('b');b.textContent=t;b.style.display='block';b.style.margin='8px 0 4px';return b};
+const mu=(t)=>{const d=document.createElement('div');d.className='mu';d.textContent=t;return d};
+box.append(mk('Display'),selRow('Layout',['Auto','Portrait','Landscape'],{auto:'Auto',portrait:'Portrait',landscape:'Landscape'}[LAYOUT],v=>{LAYOUT=v.toLowerCase();applyLayout();saveTheme()}),mu('Auto switches to landscape on wide screens (canvas on the left, panels on the right).'));
+box.append(mk('Interface colours'));
+const uiSel=selRow('Preset',Object.keys(UIP).concat('Custom'),TH.ui,v=>{TH.ui=v;if(v!=='Custom'&&UIP[v])TH.uic={...UIP[v]};applyAll();buildTheme()});box.append(uiSel);
+const ug=document.createElement('div');ug.className='cgrid';UIK.forEach(q=>ug.append(crow(q[1],TH.uic[q[0]],v=>{TH.uic[q[0]]=v;TH.ui='Custom';uiSel.querySelector('select').value='Custom';applyAll()})));box.append(ug);
+box.append(mk('Simulation canvas'));
+const cvSel=selRow('Preset',Object.keys(CVP).concat('Custom'),TH.cvp,v=>{TH.cvp=v;if(CVP[v]){const a=CVP[v];Object.assign(TH.cv,{void:a[0],floor:a[1],border:a[2],label:a[3],bond:a[4]})}applyAll();buildTheme()});box.append(cvSel);
+const cg=document.createElement('div');cg.className='cgrid';
+[['void','Outside the world'],['floor','World floor'],['border','World border'],['label','Structure labels'],['bond','Bond lines']].forEach(q=>cg.append(crow(q[1],TH.cv[q[0]],v=>{TH.cv[q[0]]=v;TH.cvp='Custom';cvSel.querySelector('select').value='Custom';applyAll()})));box.append(cg);
+box.append(mk('Temperature map'));
+const hSel=selRow('Palette',Object.keys(HPAL).concat('Custom'),TH.hp,v=>{TH.hp=v;if(HPAL[v]){const a=HPAL[v];Object.assign(TH.cv,{hot0:a[0],hot1:a[1],cold0:a[2],cold1:a[3]})}applyAll();buildTheme()});box.append(hSel);
+const hg=document.createElement('div');hg.className='cgrid';
+[['hot0','Warm (mild)'],['hot1','Hot (extreme)'],['cold0','Cool (mild)'],['cold1','Cold (extreme)']].forEach(q=>hg.append(crow(q[1],TH.cv[q[0]],v=>{TH.cv[q[0]]=v;TH.hp='Custom';hSel.querySelector('select').value='Custom';applyAll()})));box.append(hg);
+const lab=document.createElement('label'),ls=document.createElement('span'),ri=document.createElement('input');ls.textContent='Map opacity';ri.type='range';ri.min=0;ri.max=200;ri.value=Math.round(TH.cv.heatA*100);ri.oninput=()=>{TH.cv.heatA=ri.value/100;applyAll()};lab.append(ls,ri);box.append(lab);
+box.append(mk('Everything else'));
+const g1=[];TY.forEach((t,i)=>g1.push(crow(t.n+' · '+TYN[i],TH.prima[i],v=>{TH.prima[i]=v;applyAll()})));box.append(grp('Primas',g1));
+const g2=Object.keys(TH.kinds).map(k=>crow(k,TH.kinds[k],v=>{TH.kinds[k]=v;applyAll()}));box.append(grp('Structure types (glow and rings)',g2));
+box.append(grp('Energon levels',TH.lv.map((v,i)=>crow('L'+i+' · '+LVN[i][0],v,x=>{TH.lv[i]=x;applyAll()}))));
+box.append(grp('Layers and field rings',[...['Core','Body','Edge'].map((n,i)=>crow('Layer: '+n,TH.ly[i],x=>{TH.ly[i]=x;applyAll()})),...TH.lc.map((v,i)=>crow('Field ring '+(i+1),v,x=>{TH.lc[i]=x;applyAll()}))]));
+box.append(grp('Onogon states',Object.keys(TH.sc).map(k=>crow(k,TH.sc[k],x=>{TH.sc[k]=x;applyAll()}))));
+box.append(grp('Phase view',['Solid','Liquid','Gas','Liquid Energy'].map((n,i)=>crow(n,TH.ph[i],x=>{TH.ph[i]=x;applyAll()}))));
+box.append(grp('Light spectrum (more Je = higher number)',TH.light.map((v,i)=>crow('Light '+(i+1),v,x=>{TH.light[i]=x;applyAll()}))));
+const rb=document.createElement('button');rb.textContent='Reset all colours and layout';rb.style.marginTop='10px';rb.onclick=()=>{TH=JSON.parse(JSON.stringify(DEF));LAYOUT='auto';applyAll();applyLayout();buildTheme()};box.append(rb);
+box.append(mu('Colours are saved in this browser.'))}
+
+const GK=[
+['Cell','A cloud of Primas that binds, grows through stages and forms field layers.','The most common energon. Higher levels let it slowly release Streams.'],
+['Frostar','A Cell under extreme cooling and/or viscous (Ku) deposition.','Drains heat from its surroundings.'],
+['Blazar','A Cell under extreme warming and/or intense (Je) deposition.','Heats its surroundings and throws Flares when hot.'],
+['Cyclone','A Cell with extreme circulation and/or external force.','Really spins its insides and drags nearby Primas into the rotation.'],
+['Star','Extreme circulation plus another extreme.','Pulses with light and flings light rays from lit Je + Ky.'],
+['Energizer','Antronous and/or positronous deposition.','Pulls in Liquid Energy and forges new Elements.'],
+['Thundercell','Extreme intense deposition and/or weak fields.','Expels bolts, arcs and sparks from its own Primas.'],
+['Fieldnet','Compaction plus intense deposition or weak fields.','Gathers nearby energy with a field net.'],
+['Pulser','Extreme densing and/or constant collision.','Emits waves.'],
+['Pulsar','Durable field plus intense deposition or external force.','Emits strong waves, and a Primordial one can eliminate Cyclones.'],
+['Razor','Antronous and positronous deposition together.','Alternates pushing and pulling waves.'],
+['Anti-Energon','Positronous wipeout.','Hunts larger structures; its cold flash dissolves them.'],
+['Gas Group','Formation failure, death or rapid shrinking.','Dispersed gaseous energy rather than a tight cluster.'],
+['Radial','A Gas Group left with only Ky, g and Je (no field, no circulation).','A ball of light mixed with energy; sheds light rays.'],
+['Gravitron','A Thundercell that grows past 100 Primas.','Huge pull on everything nearby.'],
+['Quasar','A Fieldnet under sustained extreme intensity.','Expels bolts, arcs, jets, beams and films.'],
+['Micron','A tiny bonded ring of a few Primas.','The smallest energon.'],
+['Macron','A Cell after extreme growth.','Gigantic, slow and unstable; its wall absorbs impacts but can rupture.'],
+['Reactor','A Cell with a lot of Je and a weak field.','Spews energy like Beams while sustaining itself.'],
+['Accelereactor','Antron and Positron interaction, external force or looping circulation.','Accelerates to high speed, usually spinning.'],
+['Binary Cell','A positron half joined to an antron half.','Two opposed halves in one structure.']];
+const GRL={M:'base binder of the structure',Ps:'binds (membrane material)',U:'binds (vector shell material)',P:'Positron: heats its surroundings, charge +',Ae:'Antron: drains heat, charge −',g:'the strongest binder',h:'binds lightly',f:'builds the field layers',Je:'intensity and force; the source of bolts and light',Ku:'viscosity; slows and thickens',Ky:'light; shines only when bonded to Je'};
+function buildGuide(){const dot=c=>'<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:'+c+';margin-right:5px"></i>';
+let h='<b>Guide</b><div class="mu">What everything in this simulator means. Tap a heading to open it.</div>';
+h+='<details open><summary>What is an Energon?</summary><p>An <b>energon</b> is a structure made of energy. In this simulator it is a group of Primas that bind together and stay together, with its own position, temperature, age, level and behaviour. A <b>Cell</b> is the most common energon, and most other energons are what a Cell becomes under extreme conditions.</p><p>The loose particles are <b>Primas</b>, the basic units of energy. Everything else here is made by them attracting, repelling, heating, cooling and binding.</p></details>';
+h+='<details><summary>The Primas</summary><table>'+TY.map((t,i)=>'<tr><td>'+dot(t.c)+'<b>'+t.n+'</b></td><td>'+(TYN[i]==='Ky'?'Ky':TYN[i])+'</td><td>'+GRL[t.n]+'</td></tr>').join('')+'</table><p class="mu">Ky is shown as light only when it is bonded to a Je. Names are drawn on each Prima when you zoom in.</p></details>';
+h+='<details><summary>How a Cell forms</summary><p>Primas that are close enough bind into a cluster. A cluster is tracked as a structure and ages through stages:</p><ol>'+STG.map(q=>'<li>'+q[0]+' <span class="mu">(from '+q[2]+' Primas)</span></li>').join('')+'</ol><p>As it matures it grows field layers (Core, Duoprimordial, Primordial, Primactive and Primatronic) and a circulation. Only a Cell with formed field layers can branch into another energon.</p></details>';
+h+='<details><summary>Energon types and how they form</summary><table><tr><th>Type</th><th>Forms from</th><th>Does</th></tr>'+GK.map(q=>'<tr><td><b>'+q[0]+'</b></td><td>'+q[1]+'</td><td>'+q[2]+'</td></tr>').join('')+'</table><p class="mu">Create menu: Energons (direct) places any of these without waiting for a Cell to evolve. Select a structure with Inspect to see which pathways it is currently satisfying.</p></details>';
+h+='<details><summary>Energon levels 0 to 5</summary>'+LVN.map((q,i)=>'<p>'+dot(LVC[i])+'<b>L'+i+' · '+q[0]+'</b>'+(q[1]?' ('+q[1]+'-)':'')+': '+LVD[i]+'</p>').join('')+'<p class="mu">A structure changes level as its stress changes. Higher levels multiply its output from ×1.15 up to ×4. Level 5 survives limits that would shatter or remove lower levels.</p></details>';
+h+='<details><summary>Onogons and envelopes</summary><p><b>Onogons</b> are compounds of Primas, for example Je + Ky for light. They have three states: <b>Rigid</b> (fully bonded), <b>Loose</b> (partly bonded) and <b>Mixed</b> (components present but not bonded). Heat above +2,600 °U breaks bonds.</p><p><b>Envelopes</b> are compounds of compounds. They can survive a vaporized structure and carry a trace of its history; Inspect one to read it. They break apart if their halves drift too far apart or get too hot.</p></details>';
+h+='<details><summary>Energy releases</summary><table>'+EVD.map(q=>'<tr><td><b>'+q[0]+'</b></td><td>'+q[1]+'</td></tr>').join('')+'</table></details>';
+h+='<details><summary>Temperature and phases</summary><p>Temperature is measured in <b>°U</b>. Between about −2,600 and +2,600 °U things behave normally; beyond those gates structures start to be affected. At <b>±12,780 °U Primas simply disappear</b>, unless they belong to a Level 5 structure.</p><p>Matter-like states are emergent from spacing: <b>solid</b> (compact), <b>liquid</b> (spaced) and <b>gas</b> (widely spaced). <b>Liquid Energy</b> is what a dying or shattered structure becomes, and it later fades into background energy. Positrons heat, Antrons cool.</p></details>';
+h+='<details><summary>Interworlds, waves and the Big Bang</summary><p><b>Interworlds</b> are bounded regions that hold their own Primas inside a boundary. <b>Waves</b> are expanding rings that push or pull Primas and are emitted by Pulsers, Pulsars and Razors. The <b>Big Bang</b> world preset starts everything from a single hot point; use a large map.</p></details>';
+h+='<details><summary>Tools and controls</summary><ul><li><b>Create</b>: place whatever is selected in the Create list (Primas, cells, energons, Onogons, Microns, Interworlds, effects).</li><li><b>Pull / Push</b>: attract or repel Primas around the cursor.</li><li><b>Degrade</b>: weakens Je and slowly turns Primas into Liquid Energy.</li><li><b>Erase</b>: removes Primas under the brush.</li><li><b>Heat / Cold</b>: add or remove temperature under the brush.</li><li><b>Inspect</b>: select a structure or envelope to read its details.</li><li><b>Pan</b>: drag the view. The small map in the corner also jumps the camera.</li></ul><p>Brush size and Strength apply to Pull, Push, Degrade, Erase, Heat and Cold. Pause, speed (×1 to ×4) and Layers sit on the canvas.</p></details>';
+h+='<details><summary>Views (Binding tab)</summary><ul><li><b>Bonds</b>: lines between bound Primas.</li><li><b>Coordination</b>: how many neighbours each Prima is bound to.</li><li><b>Layers</b>: core, body and edge of each structure.</li><li><b>Phase</b>: solid, liquid or gas.</li><li><b>Flow map</b>: arrows showing where energy moves.</li><li><b>Light</b>: hides Primas and shows only what light reveals, fading out with distance like the temperature map.</li></ul></details>';
+h+='<details><summary>World size and performance</summary><p>Pick a preset size or a custom width and height in the World tab (up to 8000 per side). Larger maps mean more empty space, so raise the Particle limit if you want them populated. Many thousands of Primas can lag on phones; auto-throttle lowers the speed when the frame rate drops.</p></details>';
+$('gd').innerHTML=h}
+$('ws').value=String($('ws').value);loadTheme();applyTheme();applyPrimas();buildTheme();buildGuide();applyLayout();
+
 setWorld(1);
 let last=performance.now(),ema=16,fc=0,slow=0;
 function loop(t){const dt=t-last;last=t;ema=ema*.92+Math.min(dt,100)*.08;
